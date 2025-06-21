@@ -2,8 +2,13 @@
   "name": "advanced-note-app",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev" : "ts-node-dev --respawn --transpile-only src/server.ts",
+    "prod": "node dist/server.ts",
+    "start": "node dist/server.ts",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,6 +16,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.5.0",
+    "eslint": "^9.29.0",
     "express": "^5.1.0",
     "mongoose": "^8.15.2"
   },
