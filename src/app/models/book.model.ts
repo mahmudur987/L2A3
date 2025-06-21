@@ -52,6 +52,7 @@ const bookSchema = new Schema<IBook, bookMethod>(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 bookSchema.static("updateAvailable", function updateAvailable(id) {

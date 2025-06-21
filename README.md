@@ -1,4 +1,4 @@
-# 📚 Advanced Note App with Mongoose
+# 📚 Library Management API with Express, TypeScript & MongoDB
 
 A simple Node.js and Express application for managing a book library, built using TypeScript, Mongoose (MongoDB), and RESTful APIs.
 

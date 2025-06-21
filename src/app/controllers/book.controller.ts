@@ -24,17 +24,17 @@ booksRoutes.post("/books", async (req: Request, res: Response) => {
 // get all book
 booksRoutes.get("/books", async (req: Request, res: Response) => {
   const {
-    genre,
     sortBy = "title",
     sort,
     limit,
+    ...filters
   }: {
     genre?: string;
     sortBy?: string;
     sort?: string;
     limit?: number;
   } = req.query;
-
+  console.log(filters);
   let sortOrder: {} = {};
   if (sortBy && sort) {
     const sortObj = {
@@ -43,13 +43,12 @@ booksRoutes.get("/books", async (req: Request, res: Response) => {
     sortOrder = sortObj;
   }
 
-  const result = await Book.find(genre ? { genre } : {})
+  const result = await Book.find(filters ? filters : {})
     .sort(sortOrder ? sortOrder : {})
     .limit(limit ? limit : 0);
   res.status(201).json({
     success: true,
     message: "Book retrieved successfully",
-    count: result.length,
     data: result,
   });
 });
@@ -72,11 +71,14 @@ booksRoutes.get("/books/:id", async (req: Request, res: Response) => {
   }
 });
 // update book
-booksRoutes.patch("/books/:bookId", async (req: Request, res: Response) => {
+booksRoutes.put("/books/:bookId", async (req: Request, res: Response) => {
   const id = req.params.bookId;
   const updatedDoc = req.body;
   try {
-    const result = await Book.findByIdAndUpdate(id, updatedDoc, { new: true });
+    const result = await Book.findByIdAndUpdate(id, updatedDoc, {
+      new: true,
+      runValidators: true,
+    });
     res.status(201).json({
       success: true,
       message: "Book updated successfully",
@@ -99,7 +101,7 @@ booksRoutes.delete("/books/:bookId", async (req: Request, res: Response) => {
     res.status(201).json({
       success: true,
       message: "Book deleted successfully",
-      data: result,
+      data: null,
     });
   } catch (error) {
     res.status(500).json({
@@ -134,7 +136,6 @@ booksRoutes.post("/borrow", async (req: Request, res: Response) => {
         success: true,
         message: "Book borrowed successfully",
         data: result,
-        book: updatePreferredBook,
       });
     } else {
       res.status(201).json({
@@ -180,7 +181,7 @@ booksRoutes.get("/borrow", async (req: Request, res: Response) => {
         },
       },
     ]);
-    console.log(Book.collection.name);
+
     res.status(201).json({
       success: true,
       message: "Borrowed books summary retrieved successfully",
