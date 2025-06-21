@@ -10,12 +10,9 @@ app.use(express.json());
 dotenv.config();
 
 app.use("/api", booksRoutes);
-// app.use("/users", usersRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to library maintenances App");
 });
 
 export default app;
-
-// mvc - model  , controller
