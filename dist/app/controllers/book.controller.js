@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -38,7 +49,8 @@ exports.booksRoutes.post("/books", (req, res) => __awaiter(void 0, void 0, void 
 }));
 // get all book
 exports.booksRoutes.get("/books", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { genre, sortBy = "title", sort, limit, } = req.query;
+    const _a = req.query, { sortBy = "title", sort, limit = 10 } = _a, filters = __rest(_a, ["sortBy", "sort", "limit"]);
+    console.log(filters);
     let sortOrder = {};
     if (sortBy && sort) {
         const sortObj = {
@@ -46,13 +58,12 @@ exports.booksRoutes.get("/books", (req, res) => __awaiter(void 0, void 0, void 0
         };
         sortOrder = sortObj;
     }
-    const result = yield book_model_1.default.find(genre ? { genre } : {})
+    const result = yield book_model_1.default.find(filters ? filters : {})
         .sort(sortOrder ? sortOrder : {})
         .limit(limit ? limit : 0);
     res.status(201).json({
         success: true,
         message: "Book retrieved successfully",
-        count: result.length,
         data: result,
     });
 }));
@@ -76,11 +87,14 @@ exports.booksRoutes.get("/books/:id", (req, res) => __awaiter(void 0, void 0, vo
     }
 }));
 // update book
-exports.booksRoutes.patch("/books/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.booksRoutes.put("/books/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.bookId;
     const updatedDoc = req.body;
     try {
-        const result = yield book_model_1.default.findByIdAndUpdate(id, updatedDoc, { new: true });
+        const result = yield book_model_1.default.findByIdAndUpdate(id, updatedDoc, {
+            new: true,
+            runValidators: true,
+        });
         res.status(201).json({
             success: true,
             message: "Book updated successfully",
@@ -103,7 +117,7 @@ exports.booksRoutes.delete("/books/:bookId", (req, res) => __awaiter(void 0, voi
         res.status(201).json({
             success: true,
             message: "Book deleted successfully",
-            data: result,
+            data: null,
         });
     }
     catch (error) {
@@ -131,7 +145,6 @@ exports.booksRoutes.post("/borrow", (req, res) => __awaiter(void 0, void 0, void
                 success: true,
                 message: "Book borrowed successfully",
                 data: result,
-                book: updatePreferredBook,
             });
         }
         else {
@@ -177,7 +190,6 @@ exports.booksRoutes.get("/borrow", (req, res) => __awaiter(void 0, void 0, void 
                 },
             },
         ]);
-        console.log(book_model_1.default.collection.name);
         res.status(201).json({
             success: true,
             message: "Borrowed books summary retrieved successfully",

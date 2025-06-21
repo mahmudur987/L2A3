@@ -26,7 +26,7 @@ booksRoutes.get("/books", async (req: Request, res: Response) => {
   const {
     sortBy = "title",
     sort,
-    limit,
+    limit = 10,
     ...filters
   }: {
     genre?: string;
@@ -45,7 +45,7 @@ booksRoutes.get("/books", async (req: Request, res: Response) => {
 
   const result = await Book.find(filters ? filters : {})
     .sort(sortOrder ? sortOrder : {})
-    .limit(limit ? limit : 0);
+    .limit(limit ? limit : 10);
   res.status(201).json({
     success: true,
     message: "Book retrieved successfully",

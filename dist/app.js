@@ -11,9 +11,18 @@ app.use(express_1.default.json());
 // middleware
 dotenv_1.default.config();
 app.use("/api", book_controller_1.booksRoutes);
-// app.use("/users", usersRoutes);
 app.get("/", (req, res) => {
     res.send("Welcome to library maintenances App");
 });
+app.use((req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: `Route  not found`,
+    });
+});
+app.use((err, req, res, next) => {
+    return res
+        .status(500)
+        .json({ success: false, message: "Something went wrong!" });
+});
 exports.default = app;
-// mvc - model  , controller

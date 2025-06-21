@@ -82,6 +82,7 @@ const bookSchema = new mongoose_1.Schema({
     },
 }, {
     timestamps: true,
+    versionKey: false,
 });
 bookSchema.static("updateAvailable", function updateAvailable(id) {
     const result = this.findByIdAndUpdate(id, { available: false }, { new: true });
