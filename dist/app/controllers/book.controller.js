@@ -60,7 +60,7 @@ exports.booksRoutes.get("/books", (req, res) => __awaiter(void 0, void 0, void 0
     }
     const result = yield book_model_1.default.find(filters ? filters : {})
         .sort(sortOrder ? sortOrder : {})
-        .limit(limit ? limit : 0);
+        .limit(limit ? limit : 10);
     res.status(201).json({
         success: true,
         message: "Book retrieved successfully",
